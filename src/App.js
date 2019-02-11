@@ -1,28 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {loadData} from "./actions/loadDataAction";
+import {bindActionCreators} from "redux";
+import {connect} from 'react-redux';
+import Form from "./containers/Form";
+import FlightList from "./containers/FlightsList";
+import FlightDetails from "./containers/FlightDetails"
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.fetchData()
+  }
+
+  fetchData=()=> {
+    fetch("https://api.spacexdata.com/v2/launches")
+        .then(response=>response.json())
+          .then((response)=>{
+            this.props.loadData(response);
+          });
+  };
+
   render() {
-    return (
+
+    return(
+
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Form/>
+        <h2>Flights</h2>
+        <FlightList/>
+        <h2>Flight Details</h2>
+        <FlightDetails/>
       </div>
     );
   }
 }
 
-export default App;
+
+function mapDispatchToProps(dispatch){
+  return(
+      bindActionCreators({loadData:loadData},dispatch)
+  )
+}
+export default connect(null,mapDispatchToProps)(App);
