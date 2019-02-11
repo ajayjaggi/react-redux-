@@ -6,15 +6,34 @@ import {flightSelectAction} from "../actions/flightSelectAction";
 class FlightList extends  Component{
 
     createList(){
-        return this.props.flights.map((flight)=>{
-            return(
-                <li key={flight.flight_number} onClick={()=>{this.props.selectFlight(flight)}}>
-                    {flight.flight_number}
-                    {flight.mission_name}
-                    {flight.links.mission_patch}
-                </li>
-            )
-        })
+        if(!this.props.timeLine){
+            return this.props.flights.map((flight)=>{
+                return(
+                    <li key={flight.flight_number} onClick={()=>{this.props.selectFlight(flight)}}>
+                        {flight.flight_number}<br/>
+                        {flight.mission_name}<br/>
+                        {/*<img src={flight.links.mission_patch}/> <br/>*/}
+                    </li>
+                )
+
+            })
+        }
+        else{
+            return this.props.flights.map((flight)=>{
+                if(parseInt(this.props.timeLine.startYear)<parseInt(flight.launch_year) &&  parseInt(flight.launch_year) <parseInt(this.props.timeLine.endYear)){
+                    return(
+                        <li key={flight.flight_number} onClick={()=>{this.props.selectFlight(flight)}}>
+                            {flight.flight_number}<br/>
+                            {flight.mission_name}<br/>
+                           {/*<img  src={flight.links.mission_patch}/> <br/> */}
+                        </li>
+                    )
+                }
+
+
+            })
+        }
+
     }
 
 
@@ -33,7 +52,7 @@ class FlightList extends  Component{
 function mapStateToProps(state){
     return(
         {
-            flights:state.flights,
+            flights:state.flights||[],
             timeLine:state.activeTimeline
         }
     )

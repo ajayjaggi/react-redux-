@@ -26,9 +26,14 @@ class Form extends Component{
         })
     };
 
+    handleFormSubmit=(e)=>{
+        e.preventDefault()
+        this.props.submitForm({startYear:this.state.start,endYear:this.state.end})
+    }
+
     render(){
         return(
-            <form onSubmit={()=>this.props.submitForm({startYear:this.state.start,endYear:this.state.end})}>
+            <form onSubmit={this.handleFormSubmit.bind(this)}>
                 <label>Start Year </label>
                 <input type="text" value={this.state.start} onChange={this.handleStartChange} required/>
                 <label>End Year </label>
